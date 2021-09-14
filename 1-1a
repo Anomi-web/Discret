@@ -1,0 +1,161 @@
+using System;
+using System.Collections.Generic;
+
+
+namespace _1a
+{
+    class Program
+    {
+        static List<char> Set(List<char> A, string name)
+        {
+            int i, amount;
+            char value = ' ';
+            Console.WriteLine($"Введите количество элементов в множестве {name}");
+            amount = Convert.ToInt32(Console.ReadLine());
+            for (i = 0; i < amount; i++)
+            {
+                while (!(char.IsLetter(value)))
+                {
+                    Console.WriteLine($"Введите {i+1} элемент множества {name}(различные буквы)");
+                    value = Convert.ToChar(Console.ReadLine());
+                }
+                A.Add(value);
+                value = ' ';
+            }
+            return A;
+        }
+
+        static List<char> Unific(List<char> A, List<char> B, List<char> C)
+        {
+            List<char> D = new List<char>();
+            D.AddRange(A);
+            for(int i = 0; i < B.Count; i++)
+            {
+                D.Remove(B[i]);
+                D.Add(B[i]);
+            }
+            for (int i = 0; i < C.Count; i++)
+            {
+                D.Remove(C[i]);
+                D.Add(C[i]);
+            }
+            return D;
+        }
+        static List<char> Unific(List<char> A, List<char> B)
+        {
+            List<char> D = new List<char>();
+            D.AddRange(A);
+            for (int i = 0; i < B.Count; i++)
+            {
+                D.Remove(B[i]);
+                D.Add(B[i]);
+            }
+            return D;
+        }
+        static List<char> Cross(List<char> A, List<char> B, List<char> C)
+        {
+            List<char> D = new List<char>();
+            for (int i = 0; i < B.Count; i++)
+                if (A.Contains(B[i]) && C.Contains(B[i]))
+                {
+                    D.Add(B[i]);
+                }
+            return D;
+        }
+        static List<char> Cross(List<char> A, List<char> B)
+        {
+            List<char> D = new List<char>();
+            for (int i = 0; i < B.Count; i++)
+                if (A.Contains(B[i]))
+                {
+                    D.Add(B[i]);
+                }
+            return D;
+        }
+        static List<char> Diff(List<char> A, List<char> B)
+        {
+            List<char> D = new List<char>();
+            D.AddRange(A);
+            for (int i = 0; i < B.Count; i++)
+                if (D.Contains(B[i]))
+                {
+                    D.Remove(B[i]);
+                }
+            return D;
+        }
+        static List<char> Simdiff(List<char> A, List<char> B, List<char> C)
+        {
+            List<char> D = new List<char>();
+            D = Unific(A, B, C);
+            List<char> F = new List<char>();
+            F = Cross(A, B);
+            for (int i = 0; i > F.Count; i++)
+            {
+                D.Remove(F[i]);
+            }
+            F = Cross(B, C);
+            for (int i = 0; i > F.Count; i++)
+            {
+                D.Remove(F[i]);
+            }
+            F = Cross(A, C);
+            for (int i = 0; i > F.Count; i++)
+            {
+                D.Remove(F[i]);
+            }
+            return D;
+        }
+        static List<char> Obj(List<char> A)
+        {
+            List<char> D = new List<char>();
+            char[] Alph = new char[] { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z' };
+            for (int x = 0; x < Alph.Length; x++)
+            {
+                if (!A.Contains(Alph[x]))
+                {
+                    D.Add(Alph[x]);
+                }
+            }
+            return D;
+        }
+
+        static void Main(string[] args)
+        {
+            string name;
+            List<char> A = new List<char>();
+            name = "A";
+            Set(A, name);
+            List<char> B = new List<char>();
+            name = "B";
+            Set(B, name);
+            List<char> C = new List<char>();
+            name = "C";
+            Set(C, name);
+            Console.WriteLine("A-(B+C) = (A-B)*(A-C)");
+            List<char> D = new List<char>();
+            D = Diff(A, Unific(B, C));
+            List<char> F = new List<char>();
+            F = Cross(Diff(A, B), Diff(A,C));
+            if (new HashSet<char>(D).SetEquals(F))
+            {
+                Console.WriteLine(true);
+                for (int i = 0; i < D.Count; i++)
+                Console.Write(D[i] + " ");
+            }    
+            else
+            {
+                Console.Write("false, D = ");
+                for(int i = 0; i < D.Count; i++)
+                {
+                    Console.Write(D[i] + " ");
+                }
+                Console.Write("F = ");
+                for (int i = 0; i < F.Count; i++)
+                {
+                    Console.Write(F[i] + " ");
+                }
+                Console.WriteLine("");
+            }
+        }
+    }
+}
